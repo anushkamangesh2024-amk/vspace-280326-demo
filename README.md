@@ -1,46 +1,41 @@
 ![](../../workflows/gds/badge.svg) ![](../../workflows/docs/badge.svg) ![](../../workflows/test/badge.svg) ![](../../workflows/fpga/badge.svg)
 
-# V-SPACE Demo Hardware Stopwatch
+# Medical Device Battery Monitoring and Safety Controller
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/AdvaittejPS/vspace-280326-demo/blob/main/workshop/V_SPACE_demo_280326_notebook.ipynb)
+## Project Vision
+In the clinical environment, the reliability of a device's power source is directly tied to patient safety. This project focuses on the development of an autonomous digital controller designed to monitor, protect, and report on the health of battery systems used in life-critical medical equipment, such as portable ventilators and infusion pumps. 
 
-**Welcome to the V-SPACE Bootcamp!** Click the badge above to launch the interactive chip design environment directly in your browser.
+By offloading safety-critical power management to dedicated hardware logic, we ensure that the medical device remains operational and safe even if the primary system software experiences a hang or failure.
 
----
-- [Read the documentation for project](docs/info.md)
+## System Architecture
+The controller is designed as a high-reliability hardware module that interfaces directly with battery cells and the host medical system. It operates on a "Safety-First" priority matrix, where hardware-level interrupts override all other operations if electrical or thermal boundaries are breached.
 
-## What is Tiny Tapeout?
+### Core Functional Blocks
 
-Tiny Tapeout is an educational project that aims to make it easier and cheaper than ever to get your digital and analog designs manufactured on a real chip.
+#### 1. Precision Voltage & Current Surveillance
+The heart of the controller is a monitoring engine that tracks the electrical state of the battery pack. 
+*   **Over-Voltage Protection (OVP):** Prevents cell damage and fire risks during charging cycles.
+*   **Under-Voltage Lockout (UVLO):** Protects the battery from deep discharge, which can lead to permanent capacity loss or sudden device failure during use.
+*   **Over-Current Detection:** Provides a microsecond-response shut-off to protect sensitive medical electronics from short circuits or power surges.
 
-To learn more and get started, visit https://tinytapeout.com.
+#### 2. Thermal Management System
+Medical devices are often used in varied environments, from climate-controlled operating rooms to emergency transport. 
+*   The controller monitors external temperature sensors to ensure the battery operates within a safe "Goldilocks" zone.
+*   It implements logic to halt charging or discharging if the temperature exceeds safe thresholds (Overtemperature) or falls too low (Low-temperature charging protection), preventing internal cell degradation.
 
-## Set up your Verilog project
+#### 3. State-of-Charge (SoC) & Health Diagnostics
+Accurate reporting is essential for clinical staff to manage their equipment.
+*   **Fuel Gauging:** The controller calculates the remaining energy percentage using high-resolution current integration.
+*   **State-of-Health (SoH) Tracking:** Monitors long-term battery degradation markers, allowing the device to alert maintenance staff when a battery pack needs replacement before it fails in the field.
 
-1. Add your Verilog files to the `src` folder.
-2. Edit the [info.yaml](info.yaml) and update information about your project, paying special attention to the `source_files` and `top_module` properties. If you are upgrading an existing Tiny Tapeout project, check out our [online info.yaml migration tool](https://tinytapeout.github.io/tt-yaml-upgrade-tool/).
-3. Edit [docs/info.md](docs/info.md) and add a description of your project.
-4. Adapt the testbench to your design. See [test/README.md](test/README.md) for more information.
+## Design Philosophy: Reliability & Redundancy
+Unlike consumer-grade battery management, this controller is built with a focus on medical standards:
+*   **Deterministic Logic:** The system uses a Finite State Machine (FSM) architecture to ensure predictable behavior under all fault conditions.
+*   **Fail-Safe Defaults:** The default state of the power path is "Open" (Disconnected). Power is only delivered when all safety checks are actively validated by the logic core.
+*   **Low Latency Response:** By utilizing hard-wired digital logic rather than a general-purpose CPU, the controller responds to dangerous electrical events in a fraction of the time required by software-based solutions.
 
-The GitHub action will automatically build the ASIC files using [LibreLane](https://www.zerotoasiccourse.com/terminology/librelane/).
-
-## Enable GitHub actions to build the results page
-
-- [Enabling GitHub Pages](https://tinytapeout.com/faq/#my-github-action-is-failing-on-the-pages-part)
-
-## Resources
-
-- [FAQ](https://tinytapeout.com/faq/)
-- [Digital design lessons](https://tinytapeout.com/digital_design/)
-- [Learn how semiconductors work](https://tinytapeout.com/siliwiz/)
-- [Join the community](https://tinytapeout.com/discord)
-- [Build your design locally](https://www.tinytapeout.com/guides/local-hardening/)
-
-## What next?
-
-- [Submit your design to the next shuttle](https://app.tinytapeout.com/).
-- Edit [this README](README.md) and explain your design, how it works, and how to test it.
-- Share your project on your social network of choice:
+## Clinical Impact
+By implementing this controller, medical device manufacturers can guarantee a higher tier of operational uptime. The dedicated safety logic minimizes the risk of "Single Point of Failure" incidents, ensuring that the power management system remains a silent, reliable guardian of the patient’s life-support equipment.
   - LinkedIn [#tinytapeout](https://www.linkedin.com/search/results/content/?keywords=%23tinytapeout) [@TinyTapeout](https://www.linkedin.com/company/100708654/)
   - Mastodon [#tinytapeout](https://chaos.social/tags/tinytapeout) [@matthewvenn](https://chaos.social/@matthewvenn)
   - X (formerly Twitter) [#tinytapeout](https://twitter.com/hashtag/tinytapeout) [@tinytapeout](https://twitter.com/tinytapeout)
