@@ -22,7 +22,7 @@ module tb ();
 `endif
 
   // FIXED MODULE NAME
-  tt_um_AnjaniKad_medical_bms user_project (
+  tt_um_Anushka_medical_bms user_project (
 `ifdef GL_TEST
       .VPWR   (VPWR),
       .VGND   (VGND),
